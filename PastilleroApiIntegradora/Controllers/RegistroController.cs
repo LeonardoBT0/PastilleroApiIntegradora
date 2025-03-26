@@ -6,12 +6,41 @@ using System.Net.Http;
 using System.Data.Entity;
 using System;
 using PastilleroApiIntegradora.Modelos;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace PastilleroApiIntegradora.Controllers
 {
     public class RegistroController : ApiController
     {
         private salinas_SampleDBEntities1 db = new salinas_SampleDBEntities1();
+
+        // Enum para los roles
+        public enum Roles
+        {
+            Administrador = 1,
+            UsuarioNormal = 2
+        }
+
+        // Función para encriptar la contraseña
+        private string EncriptarContrasena(string contrasena)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(contrasena));
+                return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+            }
+        }
+
+        // Función para registrar usuario con un rol específico
+        private IHttpActionResult RegistrarUsuarioConRol(Usuarios usuario, int rolId, Personas persona)
+        {
+            usuario.IdRol = rolId;
+            persona.IdUsuarios = usuario.Id;
+            db.Usuarios.Add(usuario);
+            db.SaveChanges();
+            return Ok(new { mensaje = "Usuario registrado correctamente" });
+        }
 
         // POST: api/Registro
         [HttpPost]
@@ -66,21 +95,37 @@ namespace PastilleroApiIntegradora.Controllers
                     persona.IdDirecciones = direccion.Id;
                     db.SaveChanges(); // Guardamos los cambios de la persona con la referencia a la dirección
 
-                    // Crear Usuario
+                    // Crear Usuario y asignar roles
                     var usuario = new Usuarios
                     {
                         Email = registroData.Usuarios.Email,
-                        Contrasena = registroData.Usuarios.Contrasena,
-                        IdRol = registroData.Usuarios.IdRol,
+                        Contrasena = EncriptarContrasena(registroData.Usuarios.Contrasena), // Encriptamos la contraseña
                     };
-                    persona.IdUsuarios = usuario.Id;
-                    db.Usuarios.Add(usuario);
-                    db.SaveChanges(); // Guardamos el usuario
 
-                    // Confirmamos la transacción
-                    transaction.Commit();
+                    if (registroData.Usuarios.IdRol == (int)Roles.Administrador)
+                    {
+                        return RegistrarUsuarioConRol(usuario, (int)Roles.Administrador, persona);
+                    }
+                    else
+                    {
+                        // Verificar si se proporciona ficha técnica
+                        if (registroData.FichaTecnica != null)
+                        {
+                            var fichaTecnica = new FichaTecnica
+                            {
+                                Estatura = registroData.FichaTecnica.Estatura,
+                                TipoSangre = registroData.FichaTecnica.TipoSangre
+                            };
+                            db.FichaTecnica.Add(fichaTecnica);
+                            db.SaveChanges(); // Guardamos la ficha técnica
+                        }
+                        else
+                        {
+                            return BadRequest("Ficha técnica es requerida para este usuario.");
+                        }
 
-                    return Ok(new { mensaje = "Usuario registrado correctamente" });
+                        return RegistrarUsuarioConRol(usuario, (int)Roles.UsuarioNormal, persona);
+                    }
                 }
                 catch (Exception ex)
                 {
