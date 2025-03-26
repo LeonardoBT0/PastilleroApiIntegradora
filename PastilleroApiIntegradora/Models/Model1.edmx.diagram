@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7bc8e887d9984c30bed2e55e02c9048a" Name="Diagram1">
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Control" Width="1.5" PointX="0.75" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Direcciones" Width="1.5" PointX="7.5" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.FichaTecnica" Width="1.5" PointX="7.5" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Historial" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Medicamentos" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Padecimientos" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Personas" Width="1.5" PointX="9.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Roles" Width="1.5" PointX="5.25" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Tratamiento" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="salinas_SampleDBModel.Usuarios" Width="1.5" PointX="7.5" PointY="9.25" IsExpanded="true" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_Tratamiento_Control" ManuallyRouted="false" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_Personas_Direcciones" ManuallyRouted="false" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_FichaTecnica_Historial" ManuallyRouted="false" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_Personas_FichaTecnica" ManuallyRouted="false" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_Historial_Padecimientos" ManuallyRouted="false" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_Historial_Tratamiento" ManuallyRouted="false" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_Tratamiento_Medicamentos" ManuallyRouted="false" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_Personas_Usuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="salinas_SampleDBModel.FK_Usuarios_Roles" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
