@@ -13,6 +13,7 @@ namespace PastilleroApiIntegradora.Controllers
     {
         private salinas_SampleDBEntities1 db = new salinas_SampleDBEntities1();
 
+        // POST: api/Registro
         [HttpPost]
         [Route("api/Registro")]
         public IHttpActionResult RegistrarUsuario([FromBody] PersonasDto registroData)
@@ -41,7 +42,7 @@ namespace PastilleroApiIntegradora.Controllers
                         ApellidoPaterno = registroData.ApellidoPaterno,
                         ApellidoMaterno = registroData.ApellidoMaterno,
                         Edad = registroData.Edad,
-                        FotoPerfil = registroData.FotoPerfil
+                        FotoPerfil = registroData.FotoPerfil,
                     };
 
                     db.Personas.Add(persona);
@@ -55,15 +56,15 @@ namespace PastilleroApiIntegradora.Controllers
                         Calle = registroData.Direcciones.Calle,
                         CodigoPostal = registroData.Direcciones.CodigoPostal,
                         NumExterior = registroData.Direcciones.NumExterior,
-                        NumInterior = registroData.Direcciones.NumInterior,
+                        NumInterior = registroData.Direcciones.NumInterior
                     };
 
                     db.Direcciones.Add(direccion);
-                    db.SaveChanges(); // Guardamos la dirección
+                    db.SaveChanges(); // Guardamos la dirección para obtener su Id
 
-                    // Actualizamos Persona con la Dirección
+                    // Ahora, actualizamos la Persona con la dirección asignada
                     persona.IdDirecciones = direccion.Id;
-                    db.SaveChanges(); // Guardamos la relación
+                    db.SaveChanges(); // Guardamos los cambios de la persona con la referencia a la dirección
 
                     // Crear Usuario
                     var usuario = new Usuarios
@@ -72,7 +73,7 @@ namespace PastilleroApiIntegradora.Controllers
                         Contrasena = registroData.Usuarios.Contrasena,
                         IdRol = registroData.Usuarios.IdRol,
                     };
-
+                    persona.IdUsuarios = usuario.Id;
                     db.Usuarios.Add(usuario);
                     db.SaveChanges(); // Guardamos el usuario
 
@@ -89,7 +90,5 @@ namespace PastilleroApiIntegradora.Controllers
                 }
             }
         }
-
-
     }
 }
